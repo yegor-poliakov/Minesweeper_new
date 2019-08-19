@@ -67,7 +67,7 @@
 
     function newGame(difficulty_level){
         $.ajax({
-            url: "http://localhost:8080/map?difficulty_level=" + difficulty_level,
+            url: "https://minesweeperkyivbased.herokuapp.com/map?difficulty_level=" + difficulty_level,
             crossDomain: true,
             type: "GET",
             success: render
@@ -79,7 +79,7 @@
         var row = $(element).attr("data-row");
 
         $.ajax({
-            url: "http://localhost:8080/map?column=" + column + "&row=" + row,
+            url: "https://minesweeperkyivbased.herokuapp.com/map?column=" + column + "&row=" + row,
             crossDomain: true,
             type: "POST",
             success: render
