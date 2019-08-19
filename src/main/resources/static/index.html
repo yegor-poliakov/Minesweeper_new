@@ -41,12 +41,12 @@
                 } else if (cell.cellType === "Number") {
                     imgSrc = "empty.png";
                     if (cell.numberOfMines) {
-                        text = " " + cell.numberOfMines;
+                        text = "<div style = 'text-align: center; vertical-align: middle; font-size: 25px; font-weight: bold'>" + " " + cell.numberOfMines + "</div>";
                     }
                 }
 
-                var style = `background-image: url(${imgSrc}); width: 60px; height: 57px; display: table-cell;`;
-                var containerHtml =`<div data-row='${row}' data-col='${col}' onclick='makeMove(this)' style='${style}'><span>${text}</span></div>`;
+                var style = `background-image: url(${imgSrc}); width: 60px; height: 57px; display: table-cell; text-align: center; vertical-align: middle; font-size: 25px; font-weight: bold`;
+                var containerHtml =`<div data-row='${row}' data-col='${col}' onclick='makeMove(this)' style='${style}'>${text}</div>`;
                 rowHtml += containerHtml;
             }
 
