@@ -1,0 +1,91 @@
+<html>
+<head>
+    <title>Minesweeper</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+</head>
+<body>
+<div>
+    <span>MINESWEEPER+</span>
+</div>
+<div>
+    <button onclick="newGame('Easy')">Easy</button>
+    <button onclick="newGame('Medium')">Medium</button>
+    <button onclick="newGame('Hard')">Hard</button>
+</div>
+<div>
+    <br>
+</div>
+<div id="map"></div>
+
+<script type="application/javascript">
+
+    function render(gameState) {
+        var map = $("#map");
+        map.empty();
+
+        var columns = gameState.cells.length;
+        var rows = gameState.cells[0].length;
+
+        for (var row = 0; row < rows; row++) {
+            var rowHtml = "<div>";
+            for (var col = 0; col < columns; col++) {
+                var cell = gameState.cells[col][row];
+
+                var imgSrc = "invisible.png";
+
+                var text = "";
+                if (cell.cellType === "Invisible") {
+                    imgSrc = "invisible.png";
+                } else if (cell.cellType === "Mine") {
+                    imgSrc = "mine.png";
+                } else if (cell.cellType === "Number") {
+                    imgSrc = "empty.png";
+                    if (cell.numberOfMines) {
+                        text = " " + cell.numberOfMines;
+                    }
+                }
+
+                var style = `background-image: url(${imgSrc}); width: 60px; height: 57px; display: table-cell;`;
+                var containerHtml =`<div data-row='${row}' data-col='${col}' onclick='makeMove(this)' style='${style}'><span>${text}</span></div>`;
+                rowHtml += containerHtml;
+            }
+
+            rowHtml += "</div>";
+
+            map.append(rowHtml);
+        }
+
+        if (gameState.stage === "Victory") {
+            alert("You won!");
+
+        } else if (gameState.stage === "Loss") {
+            alert("You lost!");
+        }
+
+        return false;
+    }
+
+    function newGame(difficulty_level){
+        $.ajax({
+            url: "http://localhost:8080/map?difficulty_level=" + difficulty_level,
+            crossDomain: true,
+            type: "GET",
+            success: render
+        })
+    }
+
+    function makeMove(element) {
+        var column = $(element).attr("data-col");
+        var row = $(element).attr("data-row");
+
+        $.ajax({
+            url: "http://localhost:8080/map?column=" + column + "&row=" + row,
+            crossDomain: true,
+            type: "POST",
+            success: render
+        })
+    }
+
+</script>
+</body>
+</html>
