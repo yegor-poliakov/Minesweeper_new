@@ -1,4 +1,4 @@
-package minesweeper;
+package minesweeper.dto;
 
 public enum CellType {
     Invisible,

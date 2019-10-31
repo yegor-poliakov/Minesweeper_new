@@ -5,19 +5,6 @@ public class Cell {
     int numberOfMines;
     boolean isVisible;
 
-    // boolean isFlagged;
-    public String cellToString() {
-        if (isVisible) {
-            if (isAMine /** && isFlagged*/) {
-                return "X";
-            } else {
-                return Integer.toString(numberOfMines);
-            }
-        } else {
-            return "?";
-        }
-    }
-
     public boolean isAMine() {
         return isAMine;
     }
@@ -29,5 +16,8 @@ public class Cell {
     public boolean isVisible() {
         return isVisible;
     }
-    public void setIsVisible(boolean isVisibleInput){isVisible = isVisibleInput;}
+
+    public void setIsVisible(boolean isVisibleInput) {
+        isVisible = isVisibleInput;
+    }
 }

@@ -1,4 +1,4 @@
-package minesweeper;
+package minesweeper.dto;
 
 public class CellState {
     private final CellType cellType;
@@ -12,6 +12,7 @@ public class CellState {
     public CellType getCellType() {
         return cellType;
     }
+
     public int getNumberOfMines() {
         return numberOfMines;
     }

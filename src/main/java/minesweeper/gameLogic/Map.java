@@ -7,25 +7,29 @@ import static minesweeper.gameLogic.Stage.*;
 public class Map implements IMap {
     public Cell[][] cells;
 
-    public Map(int columns, int rows) {
-        cells = createMap(columns, rows);
-        numbersBetweenMines();
+    public Map() {
     }
 
-    private Cell[][] createMap(int columns, int rows) {
+    public Map(int columns, int rows) {
+        cells = createRandomCells(columns, rows);
+        populateNumbersBetweenMines(cells);
+    }
+
+    /*TODO: make different mine-rate for difficulty levels*/
+    private static Cell[][] createRandomCells(int columns, int rows) {
         Random random = new Random();
         Cell[][] minesweeper_array = new Cell[columns][rows];
         for (int row = 0; row < rows; row++)
             for (int column = 0; column < columns; column++) {
-                int a1 = random.nextInt(100);
+                int randomDummy = random.nextInt(100);
                 Cell cell = new Cell();
-                cell.isAMine = a1 < 5;
+                cell.isAMine = randomDummy < 10;
                 minesweeper_array[column][row] = cell;
             }
         return minesweeper_array;
     }
 
-    private void numberForCell(int row, int column) {
+    private static void numberForCell(Cell[][] cells, int row, int column) {
         if (cells[column][row].isAMine) {
             return;
         }
@@ -43,49 +47,18 @@ public class Map implements IMap {
         cells[column][row].numberOfMines = result;
     }
 
-    private void numbersBetweenMines() {
-
+    private static void populateNumbersBetweenMines(Cell[][] cells) {
         int rows = cells.length;
         int columns = cells[0].length;
-
         for (int row = 0; row < rows; row++)
             for (int column = 0; column < columns; column++) {
-                numberForCell(row, column);
+                numberForCell(cells, row, column);
             }
     }
 
-    private void print(boolean forPlayer) {
+    private void revealSurroundings(int column, int row) {
         int rows = cells.length;
         int columns = cells[0].length;
-
-        for (int row = 0; row < rows; row++) {
-            for (int column = 0; column < columns; column++) {
-                Cell cell = cells[column][row];
-                if (!forPlayer) {
-                    cell.isVisible = true;
-                }
-                String toPrint = cell.cellToString();
-                System.out.print(toPrint);
-            }
-            System.out.println();
-        }
-        System.out.println("");
-    }
-
-    @Override
-    public void print() {
-        print(false);
-    }
-
-    @Override
-    public void printForPlayer() {
-        print(true);
-    }
-
-    public void revealSurroundings(int column, int row) {
-        int rows = cells.length;
-        int columns = cells[0].length;
-
         if (!cells[column][row].isVisible) {
             cells[column][row].isVisible = true;
             if (cells[column][row].numberOfMines == 0) {
@@ -98,35 +71,42 @@ public class Map implements IMap {
         }
     }
 
+    /**
+     * TODO @Override public void flagMove(int column, int row){
+     * map[column][row].isFlagged=="X"
+     * }
+     */
     @Override
     public Stage makeMove(int column, int row) {
         if (cells[column][row].isAMine) {
-            for (int c = 0; c < cells.length; c++)
-                for (int r = 0; r < cells[0].length; r++) {
-                    Cell cell = cells[c][r];
-                    if (cell.isAMine()) {
-                        cell.setIsVisible(true);
-                    }
-                }
+            revealEveryCell();
             return Loss;
         } else {
             revealSurroundings(column, row);
-            for (int c = 0; c < cells.length; c++)
-                for (int r = 0; r < cells[0].length; r++) {
-                    if (!cells[c][r].isVisible && !cells[c][r].isAMine) {
-                        return Continue;
-                    }
+            if (isGameOver()) {
+                revealEveryCell();
+                return Victory;
+            } else {
+                return Continue;
+            }
+        }
+    }
+
+    private boolean isGameOver() {
+        for (int c = 0; c < cells.length; c++)
+            for (int r = 0; r < cells[0].length; r++) {
+                if (!cells[c][r].isVisible && !cells[c][r].isAMine) {
+                    return false;
                 }
-            for (int c = 0; c < cells.length; c++)
-                for (int r = 0; r < cells[0].length; r++) {
-                    cells[c][r].setIsVisible(true);
-                }
-            return Victory;
+            }
+        return true;
+    }
+
+    private void revealEveryCell() {
+        for (int c = 0; c < cells.length; c++)
+            for (int r = 0; r < cells[0].length; r++) {
+                cells[c][r].setIsVisible(true);
             }
     }
+
 }
-/**
- * @Override public void flagMove(int column, int row){
- * map[column][row].isFlagged=="X"
- * }
- */
