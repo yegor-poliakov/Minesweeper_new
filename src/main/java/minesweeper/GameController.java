@@ -21,20 +21,25 @@ public class GameController {
     @CrossOrigin(origins = "*")
     @RequestMapping(value = "/map", method = RequestMethod.GET)
     public GameState create(@RequestParam(value = "difficulty_level", defaultValue = "Medium") Difficulty difficulty) throws Exception {
-        int columns, rows;
+        int columns, rows, numberOfMines;
         switch (difficulty) {
             case Easy:
-                columns = rows = 10;
+                columns = rows = 9;
+                numberOfMines = 10;
                 break;
             case Hard:
-                columns = rows = 20;
+                columns = 30;
+                rows = 16;
+                numberOfMines = 99;
                 break;
             case Medium:
-            default:
-                columns = rows = 15;
+                columns = rows = 16;
+                numberOfMines = 40;
                 break;
+            default:
+                throw new Exception("Invalid difficulty value");
         }
-        map = new Map(columns, rows);
+        map = new Map(columns, rows, numberOfMines);
 
         GameState gameState = gameConverter.mapToGameState(Stage.Continue, map);
 
@@ -54,6 +59,7 @@ public class GameController {
 
         return gameState;
     }
+
 
 /*    @CrossOrigin(origins = "*")
     @RequestMapping(value = "/temp", method = RequestMethod.GET)

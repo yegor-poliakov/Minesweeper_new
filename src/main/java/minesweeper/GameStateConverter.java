@@ -60,9 +60,12 @@ public class GameStateConverter {
             return new CellState(CellType.Invisible, 0);
         } else if (cell.isAMine()) {
             return new CellState(CellType.Mine, 0);
+        } else if (cell.isFlagged()) {
+            return new CellState(CellType.Flag, cell.getNumberOfMines());
         } else {
             return new CellState(CellType.Number, cell.getNumberOfMines());
         }
+
     }
 
     private GameStage stageToGameStage(Stage stage) throws Exception {
