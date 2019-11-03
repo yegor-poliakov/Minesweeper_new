@@ -16,9 +16,9 @@ public class UserGame implements Serializable {
     @Column(name = "difficulty")
     private String difficulty;
 
+    @Lob
     @Column(name = "cells")
     private String cells;
-
 
     public UserGame() {
     }

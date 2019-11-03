@@ -1,5 +1,6 @@
 package minesweeper;
 
+import minesweeper.domain.UserGame;
 import minesweeper.domain.UserGameRepository;
 import minesweeper.dto.Difficulty;
 import minesweeper.dto.GameState;
@@ -12,11 +13,9 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 public class GameController {
 
-/*
     @Autowired
     UserGameRepository gameRepository;
-*/
-    GameStateConverter gameConverter = new GameStateConverter();
+    MapConverter mapConverter = new MapConverter();
     Map map = null;
 
     // generate new map for given columns and rows. Then return initial game state for player
@@ -42,8 +41,9 @@ public class GameController {
                 throw new Exception("Invalid difficulty value");
         }
         map = new Map(columns, rows, numberOfMines);
-
-        GameState gameState = gameConverter.mapToGameState(Stage.Continue, map);
+        UserGame mapForDB = mapConverter.mapToUserGame(map, Stage.Continue, difficulty);
+        mapForDB = gameRepository.save(mapForDB);
+        GameState gameState = mapConverter.mapToGameState(Stage.Continue, map, mapForDB.getId());
 
         return gameState;
     }
@@ -57,7 +57,7 @@ public class GameController {
         }
         Stage stage = map.makeMove(column, row);
 
-        GameState gameState = gameConverter.mapToGameState(stage, map);
+        GameState gameState = mapConverter.mapToGameState(stage, map, 0);
 
         return gameState;
     }

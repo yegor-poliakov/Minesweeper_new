@@ -1,3 +1,4 @@
+<!--TODO Create CSS-->
 <html>
 <head>
     <title>Minesweeper</title>
@@ -48,7 +49,7 @@
                     }
                 }
 
-                var style = `background-image: url(${imgSrc}); width: 20px; height: 20px; display: table-cell; text-align: center; vertical-align: middle; font-size: 15px; font-weight: bold`;
+                var style = `background-image: url(${imgSrc}); background-size: contain; width: 20px; height: 20px; display: table-cell; text-align: center; vertical-align: middle; font-size: 15px; font-weight: bold`;
                 var containerHtml =`<div data-row='${row}' data-col='${col}' onclick='makeMove(this)' style='${style}'>${text}</div>`;
                 rowHtml += containerHtml;
             }

@@ -5,13 +5,13 @@ import minesweeper.domain.*;
 import minesweeper.dto.*;
 import minesweeper.gameLogic.*;
 
-public class GameStateConverter {
+public class MapConverter {
 
-    GameState mapToGameState(Stage stage, Map map) throws Exception {
+    GameState mapToGameState(Stage stage, Map map, long mapID) throws Exception {
         CellState[][] cellStates = cellsToCellStates(map.cells);
         GameStage gameStage = stageToGameStage(stage);
 
-        return new GameState(gameStage, cellStates);
+        return new GameState(gameStage, cellStates, mapID);
     }
 
     public UserGame mapToUserGame(Map map, Stage stage, Difficulty difficulty) {
