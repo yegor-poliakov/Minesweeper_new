@@ -18,7 +18,8 @@
 <div id="map"></div>
 
 <script type="application/javascript">
-
+    /*const baseURL = "http://localhost:8080/";*/
+    const baseURL = "https://minesweeperkyivbased.herokuapp.com/";
     function render(gameState) {
         var map = $("#map");
         map.empty();
@@ -43,11 +44,11 @@
                 } else if (cell.cellType === "Number") {
                     imgSrc = "empty.png";
                     if (cell.numberOfMines) {
-                        text = "<div style = 'text-align: center; vertical-align: middle; font-size: 25px; font-weight: bold'>" + " " + cell.numberOfMines + "</div>";
+                        text = "<div style = 'text-align: center; vertical-align: middle; font-size: 15px; font-weight: bold'>" + " " + cell.numberOfMines + "</div>";
                     }
                 }
 
-                var style = `background-image: url(${imgSrc}); width: 9px; height: 9px; display: table-cell; text-align: center; vertical-align: middle; font-size: 25px; font-weight: bold`;
+                var style = `background-image: url(${imgSrc}); width: 20px; height: 20px; display: table-cell; text-align: center; vertical-align: middle; font-size: 15px; font-weight: bold`;
                 var containerHtml =`<div data-row='${row}' data-col='${col}' onclick='makeMove(this)' style='${style}'>${text}</div>`;
                 rowHtml += containerHtml;
             }
@@ -69,7 +70,7 @@
 
     function newGame(difficulty_level){
         $.ajax({
-            url: "https://minesweeperkyivbased.herokuapp.com/map?difficulty_level=" + difficulty_level,
+            url: baseURL + "map?difficulty_level=" + difficulty_level,
             crossDomain: true,
             type: "GET",
             success: render
@@ -81,7 +82,7 @@
         var row = $(element).attr("data-row");
 
         $.ajax({
-            url: "https://minesweeperkyivbased.herokuapp.com/map?column=" + column + "&row=" + row,
+            url: baseURL + "map?column=" + column + "&row=" + row,
             crossDomain: true,
             type: "POST",
             success: render
