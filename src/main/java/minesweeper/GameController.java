@@ -12,8 +12,10 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 public class GameController {
 
+/*
     @Autowired
     UserGameRepository gameRepository;
+*/
     GameStateConverter gameConverter = new GameStateConverter();
     Map map = null;
 
