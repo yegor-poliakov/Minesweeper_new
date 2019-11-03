@@ -21,9 +21,11 @@
 <script type="application/javascript">
     /*const baseURL = "http://localhost:8080/";*/
     const baseURL = "https://minesweeperkyivbased.herokuapp.com/";
+    var mapID = 0;
     function render(gameState) {
         var map = $("#map");
         map.empty();
+        mapID = gameState.mapID;
 
         var columns = gameState.cells.length;
         var rows = gameState.cells[0].length;
@@ -83,8 +85,16 @@
         var row = $(element).attr("data-row");
 
         $.ajax({
-            url: baseURL + "map?column=" + column + "&row=" + row,
+            url: baseURL + "map",
             crossDomain: true,
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            data: JSON.stringify({
+                column: column,
+                row: row,
+                mapID: mapID,
+                moveType: "OpenCell"
+            }),
             type: "POST",
             success: render
         })

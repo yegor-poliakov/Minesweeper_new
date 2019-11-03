@@ -51,13 +51,13 @@ public class Map implements IMap {
                 cells[column][row] = cell;
             }
         for (Coordinate m : mines){
-            cells[m.x][m.y].setIsAMine(true);
+            cells[m.x][m.y].setAMine(true);
         }
         return cells;
     }
 
     private static void numberForCell(Cell[][] cells, int row, int column) {
-        if (cells[column][row].isAMine) {
+        if (cells[column][row].isAMine()){
             return;
         }
         int result = 0;
@@ -67,11 +67,11 @@ public class Map implements IMap {
             for (int r = row - 1; r < row + 2; r++) {
                 if (c < 0 || c >= columns || r < 0 || r >= rows) continue;
 
-                if (cells[c][r].isAMine) {
+                if (cells[c][r].isAMine()) {
                     result++;
                 }
             }
-        cells[column][row].numberOfMines = result;
+        cells[column][row].setNumberOfMines(result);
     }
 
     private static void populateNumbersBetweenMines(Cell[][] cells) {
@@ -86,9 +86,9 @@ public class Map implements IMap {
     private void revealSurroundings(int column, int row) {
         int rows = cells.length;
         int columns = cells[0].length;
-        if (!cells[column][row].isVisible) {
-            cells[column][row].isVisible = true;
-            if (cells[column][row].numberOfMines == 0) {
+        if (!cells[column][row].isVisible()) {
+            cells[column][row].setVisible(true);
+            if (cells[column][row].getNumberOfMines() == 0) {
                 for (int c = column - 1; c < column + 2; c++)
                     for (int r = row - 1; r < row + 2; r++) {
                         if (c < 0 || c >= columns || r < 0 || r >= rows) continue;
@@ -103,7 +103,7 @@ public class Map implements IMap {
         int columns = cells[0].length;
         for (int c = column - 1; c < column + 2; c++)
             for (int r = row - 1; r < row + 2; r++) {
-                if (cells[columns][rows].isFlagged) continue;
+                if (cells[columns][rows].isFlagged()) continue;
                 revealSurroundings(c, r);
             }
     }
@@ -150,13 +150,13 @@ public class Map implements IMap {
 
     public void flagMove(int column, int row) {
         if (!cells[column][row].isVisible()){
-            cells[column][row].setIsFlagged(true);
+            cells[column][row].setFlagged(true);
         }
     }
 
     @Override
     public Stage makeMove(int column, int row) {
-        if (cells[column][row].isAMine) {
+        if (cells[column][row].isAMine()) {
             revealEveryCell();
             return Loss;
         } else {
@@ -178,7 +178,7 @@ public class Map implements IMap {
     private boolean isGameOver() {
         for (int c = 0; c < cells.length; c++)
             for (int r = 0; r < cells[0].length; r++) {
-                if (!cells[c][r].isVisible && !cells[c][r].isAMine) {
+                if (!cells[c][r].isVisible() && !cells[c][r].isAMine()) {
                     return false;
                 }
             }
@@ -188,7 +188,7 @@ public class Map implements IMap {
     private void revealEveryCell() {
         for (int c = 0; c < cells.length; c++)
             for (int r = 0; r < cells[0].length; r++) {
-                cells[c][r].setIsVisible(true);
+                cells[c][r].setVisible(true);
             }
     }
 }

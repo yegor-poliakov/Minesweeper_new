@@ -5,6 +5,8 @@ import minesweeper.domain.*;
 import minesweeper.dto.*;
 import minesweeper.gameLogic.*;
 
+import java.io.IOException;
+
 public class MapConverter {
 
     GameState mapToGameState(Stage stage, Map map, long mapID) throws Exception {
@@ -14,10 +16,10 @@ public class MapConverter {
         return new GameState(gameStage, cellStates, mapID);
     }
 
-    public UserGame mapToUserGame(Map map, Stage stage, Difficulty difficulty) {
+    public UserGame mapToUserGame(Map map, Stage stage, String difficulty) {
         UserGame userGame = new UserGame();
         userGame.setStage(stage + "");
-        userGame.setDifficulty(difficulty + "");
+        userGame.setDifficulty(difficulty);
         ObjectMapper objectMapper = new ObjectMapper();
 
         try {
@@ -30,15 +32,10 @@ public class MapConverter {
         return userGame;
     }
 
-    public Map userGameToMap(UserGame userGame) {
+    public Map userGameToMap(UserGame userGame) throws IOException {
         Map map = new Map();
         ObjectMapper objectMapper = new ObjectMapper();
-
-        try {
-            map.cells = objectMapper.readValue(userGame.getCells(), Cell[][].class);
-        } catch (Exception e) {
-            return null;
-        }
+        map.cells = objectMapper.readValue(userGame.getCells(), Cell[][].class);
         return map;
     }
 

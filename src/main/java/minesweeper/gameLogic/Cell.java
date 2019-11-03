@@ -1,34 +1,40 @@
 package minesweeper.gameLogic;
 
 public class Cell {
-    boolean isAMine;
-    int numberOfMines;
-    boolean isVisible;
-    boolean isFlagged;
-
-    public boolean isAMine() {
-        return isAMine;
-    }
-
-    public void setIsAMine(boolean isMineInput) { isAMine = isMineInput; }
-
-    public int getNumberOfMines() {
-        return numberOfMines;
-    }
+    private boolean isAMine;
+    private int numberOfMines;
+    private boolean isVisible;
+    private boolean isFlagged;
 
     public boolean isVisible() {
         return isVisible;
     }
 
-    public void setIsVisible(boolean isVisibleInput) {
-        isVisible = isVisibleInput;
+    public void setVisible(boolean visible) {
+        isVisible = visible;
+    }
+
+    public boolean isAMine() {
+        return isAMine;
+    }
+
+    public void setAMine(boolean AMine) {
+        isAMine = AMine;
     }
 
     public boolean isFlagged() {
         return isFlagged;
     }
 
-    public void setIsFlagged(boolean isFlaggedInput) {
-        isFlagged = isFlaggedInput;
+    public void setFlagged(boolean flagged) {
+        isFlagged = flagged;
+    }
+
+    public int getNumberOfMines() {
+        return numberOfMines;
+    }
+
+    public void setNumberOfMines(int numberOfMines) {
+        this.numberOfMines = numberOfMines;
     }
 }

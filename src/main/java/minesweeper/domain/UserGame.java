@@ -50,4 +50,8 @@ public class UserGame implements Serializable {
     public void setCells(String cells) {
         this.cells = cells;
     }
+
+    public void setId(long id) {
+        this.id = id;
+    }
 }

@@ -4,6 +4,7 @@ import minesweeper.domain.UserGame;
 import minesweeper.domain.UserGameRepository;
 import minesweeper.dto.Difficulty;
 import minesweeper.dto.GameState;
+import minesweeper.dto.MakeMoveRequest;
 import minesweeper.gameLogic.Map;
 import minesweeper.gameLogic.Stage;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +17,6 @@ public class GameController {
     @Autowired
     UserGameRepository gameRepository;
     MapConverter mapConverter = new MapConverter();
-    Map map = null;
 
     // generate new map for given columns and rows. Then return initial game state for player
     @CrossOrigin(origins = "*")
@@ -40,38 +40,24 @@ public class GameController {
             default:
                 throw new Exception("Invalid difficulty value");
         }
-        map = new Map(columns, rows, numberOfMines);
-        UserGame mapForDB = mapConverter.mapToUserGame(map, Stage.Continue, difficulty);
+        Map map = new Map(columns, rows, numberOfMines);
+        UserGame mapForDB = mapConverter.mapToUserGame(map, Stage.Continue, difficulty.toString());
         mapForDB = gameRepository.save(mapForDB);
         GameState gameState = mapConverter.mapToGameState(Stage.Continue, map, mapForDB.getId());
 
         return gameState;
     }
 
-
     @CrossOrigin(origins = "*")
     @RequestMapping(value = "/map", method = RequestMethod.POST)
-    public GameState makeMove(@RequestParam(value = "column") int column, @RequestParam(value = "row") int row) throws Exception {
-        if (map == null) {
-            throw new Exception("No map created yet");
-        }
-        Stage stage = map.makeMove(column, row);
-
-        GameState gameState = mapConverter.mapToGameState(stage, map, 0);
-
+    public GameState makeMove(@RequestBody MakeMoveRequest request) throws Exception {
+        UserGame userGame = gameRepository.findById(request.getMapID()).get();
+        Map map = mapConverter.userGameToMap(userGame);
+        Stage stage = map.makeMove(request.getColumn(), request.getRow());
+        UserGame userGameToDB = mapConverter.mapToUserGame(map, stage, userGame.getDifficulty());
+        userGameToDB.setId(userGame.getId());
+        gameRepository.save(userGameToDB);
+        GameState gameState = mapConverter.mapToGameState(stage, map, request.getMapID());
         return gameState;
     }
-
-
-/*    @CrossOrigin(origins = "*")
-    @RequestMapping(value = "/temp", method = RequestMethod.GET)
-    public List<UserGame> temp() {
-        UserGame userGame = new UserGame();
-        userGame.setDifficulty("Medium");
-        userGame.setStage("true");
-        userGame.setCells("ABC");
-        gameRepository.save(userGame);
-        List<UserGame> games = gameRepository.findAll();
-        return games;
-    }*/
 }
