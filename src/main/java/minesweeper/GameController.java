@@ -29,8 +29,8 @@ public class GameController {
                 numberOfMines = 10;
                 break;
             case Hard:
-                columns = 30;
-                rows = 16;
+                columns = 16;
+                rows = 30;
                 numberOfMines = 99;
                 break;
             case Medium:

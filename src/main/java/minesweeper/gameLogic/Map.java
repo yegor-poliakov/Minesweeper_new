@@ -48,16 +48,16 @@ public class Map implements IMap {
         for (int row = 0; row < rows; row++)
             for (int column = 0; column < columns; column++) {
                 Cell cell = new Cell();
-                cells[column][row] = cell;
+                cells[row][column] = cell;
             }
         for (Coordinate m : mines){
-            cells[m.x][m.y].setAMine(true);
+            cells[m.y][m.x].setAMine(true);
         }
         return cells;
     }
 
     private static void numberForCell(Cell[][] cells, int row, int column) {
-        if (cells[column][row].isAMine()){
+        if (cells[row][column].isAMine()){
             return;
         }
         int result = 0;
@@ -67,11 +67,11 @@ public class Map implements IMap {
             for (int r = row - 1; r < row + 2; r++) {
                 if (c < 0 || c >= columns || r < 0 || r >= rows) continue;
 
-                if (cells[c][r].isAMine()) {
+                if (cells[r][c].isAMine()) {
                     result++;
                 }
             }
-        cells[column][row].setNumberOfMines(result);
+        cells[row][column].setNumberOfMines(result);
     }
 
     private static void populateNumbersBetweenMines(Cell[][] cells) {
